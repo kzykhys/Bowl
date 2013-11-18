@@ -1,0 +1,16 @@
+{
+    "name": "kzykhys/bowl",
+    "description": "Yet another dependency injection container for PHP5.4",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Kazuyuki Hayashi",
+            "email": "hayashi@valnur.net"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    }
+}
