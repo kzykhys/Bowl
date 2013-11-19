@@ -7,7 +7,7 @@ use Bowl\Service\Service;
 /**
  * @author Kazuyuki Hayashi <hayashi@valnur.net>
  */
-class TaggedServices implements \Iterator
+class TaggedServices implements \Iterator, \Countable
 {
 
     /**
@@ -26,6 +26,14 @@ class TaggedServices implements \Iterator
     public function add(Service $service)
     {
         $this->services[] = $service;
+    }
+
+    /**
+     * @return Service[]
+     */
+    public function getServices()
+    {
+        return $this->services;
     }
 
     /**
@@ -77,6 +85,16 @@ class TaggedServices implements \Iterator
     public function rewind()
     {
         $this->position = 0;
+    }
+
+    /**
+     * Count elements of an object
+     *
+     * @return int The custom count as an integer.
+     */
+    public function count()
+    {
+        return count($this->services);
     }
 
 }

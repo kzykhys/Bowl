@@ -1,11 +1,11 @@
 Bowl, Yet Another Dependency Injection Container (PHP5.4+)
 ==========================================================
 
+- Manage multiple environment (production/development/test ...)
 - Manage dependencies between objects
 - Perform a Lazy instantiation
 - Perform a Factory pattern
 - No external files to configure dependencies
-- You don't have to instantiate object yourself
 - You can avoid Singleton/Factory pattern from your classes
 
 Installation
@@ -41,8 +41,7 @@ $bowl->share('service_name', function () {
     return new stdClass();
 });
 
-var_dump($bowl->get('service_name') === $bowl->get('service_name'));
-// bool(true)
+var_dump($bowl->get('service_name') === $bowl->get('service_name')); // bool(true)
 ```
 
 ### Define a factory service
@@ -54,8 +53,7 @@ $bowl->factory('service_name', function () {
     return new stdClass();
 });
 
-var_dump($bowl->get('service_name') === $bowl->get('service_name'));
-// bool(false)
+var_dump($bowl->get('service_name') === $bowl->get('service_name')); // bool(false)
 ```
 
 ### Define a service depending on other services
@@ -99,6 +97,49 @@ $bowl->share('form', function () {
 });
 ```
 
+### Working with environment flag
+
+``` php
+use Bowl\Bowl;
+
+$bowl = new Bowl();
+
+// Common parameters
+$bowl['lang'] = 'en';
+
+// Production configuration
+$bowl->configure('production', function (Bowl $bowl) {
+    $bowl['debug'] = false;
+
+    $bowl->share('orm.repository', function () {
+        return new EntityRepository();
+    });
+});
+
+// Development configuration
+$bowl->configure('development', function (Bowl $bowl) {
+    $bowl['debug'] = true;
+
+    $bowl->share('orm.repository', function () {
+        return new MockRepository();
+    });
+});
+
+// Common services
+$bowl->share('orm.manager', function () {
+    return new OrmManager($this->get('orm.repository'));
+});
+$bowl->share('fixture.loader', function () {
+    return new Loader($this->get('orm.manager'), $this['debug']);
+});
+
+// Set enviroment manually
+$bowl->env('production');
+
+// Or using system's environment variable
+$bowl->env(getenv('APP_ENV') ? getenv('APP_ENV') : 'production');
+```
+
 ### Real life example
 
 ``` php
@@ -123,11 +164,11 @@ $bowl->share('ciconia.extension.table', function () {
 
 // This example shows how to manage services using tags
 $bowl->share('ciconia', function () {
+    $ciconia = new \Ciconia\Ciconia();
+
     // $bowl is bind to this closure, so you can access $this as Bowl.
     if ($this['debug']) {
         $ciconia = new \Ciconia\Diagnose\Ciconia();
-    } else {
-        $ciconia = new \Ciconia\Ciconia();
     }
 
     // Resolve dependencies
@@ -153,9 +194,61 @@ echo $ciconia->render('Markdown is *awesome*');
 API
 ---
 
- Method                                | Description
----------------------------------------|-------------
- share($name, $closure, $tags = [])    |
- factory($name, $closure, $tags = [])  |
- get($name)                            |
- getTaggedServices($name)              |
+### configure(_string_ **$environment, _\Closure_ **$closure)
+
+You can configure Bowl based on environment flags such as production and development.
+
+``` php
+// sample goes here
+```
+
+### env(_string_ **$environment)
+
+``` php
+// sample goes here
+```
+
+### share(_string_ **$name**, _\Closure_ **$closure)
+
+``` php
+// sample goes here
+```
+
+### factory(_string_ **$name**, _\Closure_ **$closure)
+
+``` php
+// sample goes here
+```
+
+### extend(_string_ **$name**, _\Closure_ **$closure)
+
+``` php
+// sample goes here
+```
+
+### get(_string_ **$name**)
+
+``` php
+// sample goes here
+```
+
+### getTaggedServices(_string_ **$name**)
+
+``` php
+// sample goes here
+```
+
+Contributing
+------------
+
+Feel free to fork and send a pull request.
+
+License
+-------
+
+The MIT License
+
+Author
+------
+
+Kazuyuki Hayashi (@kzykhys)

@@ -6,11 +6,12 @@ use Bowl\Service\FactoryService;
 use Bowl\Service\Service;
 use Bowl\Service\SharedService;
 use Bowl\Traits\Parameters;
+use Traversable;
 
 /**
  * @author Kazuyuki Hayashi <hayashi@valnur.net>
  */
-class Bowl implements \ArrayAccess
+class Bowl implements \ArrayAccess, \IteratorAggregate
 {
 
     use Parameters;
@@ -24,6 +25,26 @@ class Bowl implements \ArrayAccess
      * @var Service[]
      */
     private $services = [];
+
+    /**
+     * @var Bowl[]
+     */
+    private $environments = [];
+
+    /**
+     * @var string
+     */
+    private $env = null;
+
+    /**
+     * Constructor
+     *
+     * @param array $parameters
+     */
+    public function __construct($parameters = [])
+    {
+        $this->parameters = $parameters;
+    }
 
     /**
      * @param string $name
@@ -123,6 +144,52 @@ class Bowl implements \ArrayAccess
     }
 
     /**
+     * @param          $environment
+     * @param callable $closure
+     *
+     * @return $this
+     */
+    public function configure($environment, \Closure $closure)
+    {
+        if (!isset($this->environments[$environment])) {
+            $this->environments[$environment] = new static();
+        }
+
+        $closure($this->environments[$environment]);
+
+        return $this;
+    }
+
+    /**
+     * @param $environment
+     *
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     */
+    public function env($environment) {
+        if (!isset($this->environments[$environment])) {
+            throw new \InvalidArgumentException('Undefined environment: ' . $environment);
+        }
+
+        if ($this->env && $this->env != $environment) {
+            throw new \LogicException('You can\'t switch environment. (Current: ' . $this->env . ')');
+        }
+
+        $this->env = $environment;
+        $this->merge($this->environments[$environment]);
+    }
+
+    /**
+     * Retrieve an external iterator
+     *
+     * @return Traversable An instance of an object implementing <b>Iterator</b> or <b>Traversable</b>
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->parameters);
+    }
+
+    /**
      * @param string  $name
      * @param Service $service
      * @param array   $tags
@@ -140,4 +207,28 @@ class Bowl implements \ArrayAccess
         }
     }
 
-} 
+    /**
+     * @param Bowl $bowl
+     */
+    private function merge(Bowl $bowl)
+    {
+        foreach ($bowl->parameters as $key => $value) {
+            $this[$key] = $value;
+        }
+
+        foreach ($bowl->services as $key => $value) {
+            $this->services[$key] = $value;
+        }
+
+        foreach ($bowl->tags as $key => $value) {
+            if (!isset($this->tags[$key])) {
+                $this->tags[$key] = new TaggedServices();
+            }
+
+            foreach ($value->getServices() as $service) {
+                $this->tags[$key]->add($service);
+            }
+        }
+    }
+
+}

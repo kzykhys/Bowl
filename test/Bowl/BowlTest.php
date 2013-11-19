@@ -108,6 +108,58 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($objA, $objC);
     }
 
+    public function testEnvironments()
+    {
+        $bowl = new \Bowl\Bowl();
+        $bowl['debug'] = false;
+
+        $bowl->configure('prod', function (\Bowl\Bowl $bowl) {
+            $bowl->share('test', function () {
+                return [1];
+            });
+        });
+        $bowl->configure('dev', function (\Bowl\Bowl $bowl) {
+            $bowl['debug'] = true;
+            $bowl->share('test', function () {
+                return [2];
+            });
+        });
+
+        $bowl->share('foo', function () {
+            return [0, $this->get('test')];
+        });
+
+        $bowl->env('dev');
+
+        $this->assertEquals([0, [2]], $bowl->get('foo'));
+        $this->assertTrue($bowl['debug']);
+    }
+
+    public function testEnvironmentsWithTags()
+    {
+        $bowl = new \Bowl\Bowl();
+        $bowl['debug'] = false;
+
+        $bowl->configure('prod', function (\Bowl\Bowl $bowl) {
+            $bowl->share('foo', function () { return [1]; }, ['test']);
+            $bowl->share('bar', function () { return [1]; }, ['test']);
+            $bowl->share('boo', function () { return [1]; }, ['boo']);
+        });
+        $bowl->configure('dev', function (\Bowl\Bowl $bowl) {
+            $bowl['debug'] = true;
+            $bowl->share('test', function () {
+                return [2];
+            });
+        });
+
+        $bowl->share('baz', function () { return [1]; }, ['test']);
+
+        $bowl->env('prod');
+
+        $this->assertCount(3, $bowl->getTaggedServices('test'));
+        $this->assertCount(1, $bowl->getTaggedServices('boo'));
+    }
+
     /**
      * @expectedException InvalidArgumentException
      */
@@ -134,4 +186,41 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $bowl = new \Bowl\Bowl();
         $bowl->getTaggedServices('foo.bar');
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidEnv()
+    {
+        $bowl = new \Bowl\Bowl();
+        $bowl->env('prod');
+    }
+
+    public function testSwitchToSameEnv()
+    {
+        $bowl = new \Bowl\Bowl();
+        $bowl->configure('prod', function () {});
+        $bowl->env('prod');
+        $bowl->env('prod');
+    }
+
+    /**
+     * @expectedException LogicException
+     */
+    public function testSwitchToDifferentEnv()
+    {
+        $bowl = new \Bowl\Bowl();
+        $bowl->configure('prod', function () {});
+        $bowl->configure('dev', function () {});
+        $bowl->env('prod');
+        $bowl->env('dev');
+    }
+
+    public function testIterator()
+    {
+        $bowl = new \Bowl\Bowl(['foo' => 'bar', 'baz' => true]);
+
+        $this->assertEquals(['foo' => 'bar', 'baz' => true], iterator_to_array($bowl));
+    }
+
 } 
