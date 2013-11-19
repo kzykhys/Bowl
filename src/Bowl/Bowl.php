@@ -81,6 +81,30 @@ class Bowl implements \ArrayAccess
     }
 
     /**
+     * @param          $name
+     * @param callable $closure
+     * @throws \InvalidArgumentException
+     * @return $this
+     */
+    public function extend($name, \Closure $closure)
+    {
+        if (!isset($this->services[$name])) {
+            throw new \InvalidArgumentException('Undefined service: ' . $name);
+        }
+
+        $parent = $this->services[$name]->getClosure();
+        $extend = function () use ($parent, $closure) {
+            $closure = $closure->bindTo($this);
+
+            return $closure($parent());
+        };
+
+        $this->services[$name]->setClosure($extend);
+
+        return $this;
+    }
+
+    /**
      * @param string $name
      *
      * @throws \InvalidArgumentException

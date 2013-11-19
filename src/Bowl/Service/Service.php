@@ -33,4 +33,12 @@ abstract class Service implements ServiceInterface
         return $this;
     }
 
+    /**
+     * @return \Closure
+     */
+    public function getClosure()
+    {
+        return $this->closure;
+    }
+
 } 

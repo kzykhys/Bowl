@@ -20,6 +20,8 @@ class FactoryService extends Service
 
     /**
      * {@inheritdoc}
+     *
+     * @codeCoverageIgnore
      */
     public function reset()
     {
