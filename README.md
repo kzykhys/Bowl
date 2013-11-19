@@ -194,7 +194,9 @@ echo $ciconia->render('Markdown is *awesome*');
 API
 ---
 
-### configure(_string_ **$environment, _\Closure_ **$closure)
+### Manage environment
+
+#### configure(_string_ **$environment, _\Closure_ **$closure**)
 
 You can configure Bowl based on environment flags such as production and development.
 
@@ -202,37 +204,39 @@ You can configure Bowl based on environment flags such as production and develop
 // sample goes here
 ```
 
-### env(_string_ **$environment)
+#### env(_string_ **$environment**)
 
 ``` php
 // sample goes here
 ```
 
-### share(_string_ **$name**, _\Closure_ **$closure)
+### Service container
+
+#### share(_string_ **$name**, _\Closure_ **$closure**)
 
 ``` php
 // sample goes here
 ```
 
-### factory(_string_ **$name**, _\Closure_ **$closure)
+#### factory(_string_ **$name**, _\Closure_ **$closure**)
 
 ``` php
 // sample goes here
 ```
 
-### extend(_string_ **$name**, _\Closure_ **$closure)
+#### extend(_string_ **$name**, _\Closure_ **$closure**)
 
 ``` php
 // sample goes here
 ```
 
-### get(_string_ **$name**)
+#### get(_string_ **$name**)
 
 ``` php
 // sample goes here
 ```
 
-### getTaggedServices(_string_ **$name**)
+#### getTaggedServices(_string_ **$name**)
 
 ``` php
 // sample goes here
