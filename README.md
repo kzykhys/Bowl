@@ -317,7 +317,7 @@ $bowl->share('mailer', function () {
 $bowl->get('mailer')->send($mimeMessage);
 ```
 
-#### reset(_string_, **$name**)
+#### reset(_string_ **$name**)
 
 Re-instantiate the object, even if the service is shared object.
 
