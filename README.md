@@ -25,7 +25,7 @@ Create or update your composer.json and run `composer update`
 ``` json
 {
     "require": {
-        "kzykhys/bowl": "dev-master"
+        "kzykhys/bowl": "~1.0"
     }
 }
 ```
