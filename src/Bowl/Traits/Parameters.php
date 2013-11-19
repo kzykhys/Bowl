@@ -3,6 +3,8 @@
 namespace Bowl\Traits;
 
 /**
+ * Mix-in for ArrayAccess interface
+ *
  * @author Kazuyuki Hayashi <hayashi@valnur.net>
  */
 trait Parameters

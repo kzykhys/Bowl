@@ -3,6 +3,8 @@
 namespace Bowl\Service;
 
 /**
+ * Manage services
+ *
  * @author Kazuyuki Hayashi <hayashi@valnur.net>
  */
 abstract class Service implements ServiceInterface

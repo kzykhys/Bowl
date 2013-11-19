@@ -2,16 +2,18 @@
 
 namespace Bowl;
 
-use Bowl\Service\Service;
+use Bowl\Service\ServiceInterface;
 
 /**
+ * Manages tagged services
+ *
  * @author Kazuyuki Hayashi <hayashi@valnur.net>
  */
 class TaggedServices implements \Iterator, \Countable
 {
 
     /**
-     * @var Service[]
+     * @var ServiceInterface[]
      */
     private $services = [];
 
@@ -21,15 +23,19 @@ class TaggedServices implements \Iterator, \Countable
     private $position = 0;
 
     /**
-     * @param Service $service
+     * Add a service
+     *
+     * @param ServiceInterface $service
      */
-    public function add(Service $service)
+    public function add(ServiceInterface $service)
     {
         $this->services[] = $service;
     }
 
     /**
-     * @return Service[]
+     * Returns an array of services
+     *
+     * @return ServiceInterface[]
      */
     public function getServices()
     {

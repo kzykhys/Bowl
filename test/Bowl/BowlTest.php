@@ -1,8 +1,16 @@
 <?php
 
+/**
+ * Test case of Bowl
+ *
+ * @author Kazuyuki Hayashi <hayashi@valnur.net>
+ */
 class BowlTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * Tests parameter handling
+     */
     public function testParameters()
     {
         $bowl = new \Bowl\Bowl();
@@ -15,6 +23,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(isset($bowl['foo']));
     }
 
+    /**
+     * Tests shared services
+     */
     public function testSingleton()
     {
         $bowl = new \Bowl\Bowl();
@@ -26,6 +37,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($bowl->get('test'), $bowl->get('test'));
     }
 
+    /**
+     * Tests factory services
+     */
     public function testFactory()
     {
         $bowl = new \Bowl\Bowl();
@@ -36,6 +50,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($bowl->get('test'), $bowl->get('test'));
     }
 
+    /**
+     * Tests dependencies
+     */
     public function testDependencies()
     {
         $bowl = new \Bowl\Bowl();
@@ -57,6 +74,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $object->child->name);
     }
 
+    /**
+     * Tests tagged services
+     */
     public function testTaggedServices()
     {
         $bowl = new \Bowl\Bowl();
@@ -77,6 +97,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([$bowl->get('taggedA'), $bowl->get('taggedB')], iterator_to_array($bowl->getTaggedServices('tag')));
     }
 
+    /**
+     * Tests extending services
+     */
     public function testExtend()
     {
         $bowl = new \Bowl\Bowl();
@@ -93,6 +116,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $object->name);
     }
 
+    /**
+     * Tests re-instantiation of services
+     */
     public function testResetService()
     {
         $bowl = new \Bowl\Bowl();
@@ -108,6 +134,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($objA, $objC);
     }
 
+    /**
+     * Tests environment manager
+     */
     public function testEnvironments()
     {
         $bowl = new \Bowl\Bowl();
@@ -135,6 +164,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($bowl['debug']);
     }
 
+    /**
+     * Tests environment manager with tags
+     */
     public function testEnvironmentsWithTags()
     {
         $bowl = new \Bowl\Bowl();
@@ -161,6 +193,8 @@ class BowlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests exception
+     *
      * @expectedException InvalidArgumentException
      */
     public function testInvalidServiceName()
@@ -170,6 +204,8 @@ class BowlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests exception
+     *
      * @expectedException InvalidArgumentException
      */
     public function testInvalidServiceNameOnExtend()
@@ -179,6 +215,8 @@ class BowlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests exception
+     *
      * @expectedException InvalidArgumentException
      */
     public function testInvalidTag()
@@ -188,6 +226,8 @@ class BowlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests exception
+     *
      * @expectedException InvalidArgumentException
      */
     public function testInvalidEnv()
@@ -196,6 +236,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $bowl->env('prod');
     }
 
+    /**
+     * Test env() can be called twice if the environment is the same
+     */
     public function testSwitchToSameEnv()
     {
         $bowl = new \Bowl\Bowl();
@@ -205,6 +248,8 @@ class BowlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests exception
+     *
      * @expectedException LogicException
      */
     public function testSwitchToDifferentEnv()
@@ -216,6 +261,9 @@ class BowlTest extends \PHPUnit_Framework_TestCase
         $bowl->env('dev');
     }
 
+    /**
+     * Tests Bowl as an iterator
+     */
     public function testIterator()
     {
         $bowl = new \Bowl\Bowl(['foo' => 'bar', 'baz' => true]);

@@ -3,6 +3,8 @@
 namespace Bowl\Service;
 
 /**
+ * Manage factory service
+ *
  * @author Kazuyuki Hayashi <hayashi@valnur.net>
  */
 class FactoryService extends Service

@@ -3,12 +3,13 @@
 namespace Bowl;
 
 use Bowl\Service\FactoryService;
-use Bowl\Service\Service;
+use Bowl\Service\ServiceInterface;
 use Bowl\Service\SharedService;
 use Bowl\Traits\Parameters;
-use Traversable;
 
 /**
+ * Yet Another Dependency Injection Container
+ *
  * @author Kazuyuki Hayashi <hayashi@valnur.net>
  */
 class Bowl implements \ArrayAccess, \IteratorAggregate
@@ -22,7 +23,7 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     private $tags = [];
 
     /**
-     * @var Service[]
+     * @var ServiceInterface[]
      */
     private $services = [];
 
@@ -47,9 +48,12 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param string $name
+     * Get an object
      *
-     * @throws \InvalidArgumentException
+     * @param string $name The name of the service
+     *
+     * @throws \InvalidArgumentException If the name is not defined
+     *
      * @return mixed
      */
     public function get($name)
@@ -62,7 +66,9 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param $name
+     * Re-instantiate the object
+     *
+     * @param string $name The name of the service
      *
      * @return $this
      */
@@ -74,9 +80,11 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param string   $name
-     * @param callable $closure
-     * @param array    $tags
+     * Register a shared object
+     *
+     * @param string   $name    The name of the service
+     * @param callable $closure The closure to be used as service definition
+     * @param array    $tags    [optional] An array of tags
      *
      * @return $this
      */
@@ -88,9 +96,11 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param string   $name
-     * @param callable $closure
-     * @param array    $tags
+     * Register a factory service
+     *
+     * @param string   $name    The name of the service
+     * @param callable $closure The closure to be used as factory definition
+     * @param array    $tags    [optional] An array of tags
      *
      * @return $this
      */
@@ -105,7 +115,7 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
      * @param string   $name
      * @param callable $closure
      *
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException If the name is not defined
      *
      * @return $this
      */
@@ -128,9 +138,11 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param string $name
+     * Returns services having a tag
      *
-     * @throws \InvalidArgumentException
+     * @param string $name The name of the tag
+     *
+     * @throws \InvalidArgumentException If the tag is not defined
      *
      * @return TaggedServices
      */
@@ -144,8 +156,10 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param          $environment
-     * @param callable $closure
+     *
+     *
+     * @param string   $environment The name of an environment
+     * @param callable $closure     The closure to be used to configure
      *
      * @return $this
      */
@@ -161,6 +175,8 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * Apply configuration of a environment
+     *
      * @param $environment
      *
      * @throws \LogicException
@@ -182,7 +198,7 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     /**
      * Retrieve an external iterator
      *
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or <b>Traversable</b>
+     * @return \Traversable An instance of an object implementing <b>Iterator</b> or <b>Traversable</b>
      */
     public function getIterator()
     {
@@ -190,11 +206,13 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * Register a Service
+     *
      * @param string  $name
-     * @param Service $service
+     * @param ServiceInterface $service
      * @param array   $tags
      */
-    private function register($name, Service $service, $tags = [])
+    private function register($name, ServiceInterface $service, $tags = [])
     {
         $this->services[$name] = $service;
 
@@ -208,6 +226,8 @@ class Bowl implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * Merge parameters and dependencies between two objects
+     *
      * @param Bowl $bowl
      */
     private function merge(Bowl $bowl)

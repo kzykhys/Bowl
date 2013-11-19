@@ -3,6 +3,8 @@
 namespace Bowl\Service;
 
 /**
+ * Manage shared object
+ *
  * @author Kazuyuki Hayashi <hayashi@valnur.net>
  */
 class SharedService extends Service
