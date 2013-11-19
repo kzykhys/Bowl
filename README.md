@@ -206,45 +206,115 @@ API
 You can configure Bowl based on environment flags such as production and development.
 
 ``` php
-// sample goes here
+$bowl = new \Bowl\Bowl();
+$bowl->configure('prod', function (\Bowl\Bowl $bowl) {
+    $bowl['debug'] = false;
+});
 ```
 
 #### env(_string_ **$environment**)
 
+You have to call `env()` to apply one of environments.
+
 ``` php
-// sample goes here
+$bowl = new \Bowl\Bowl();
+$bowl->configure('prod', function (\Bowl\Bowl $bowl) {
+    $bowl['debug'] = false;
+});
+
+$bowl->env('prod');
 ```
 
 ### Service container
 
-#### share(_string_ **$name**, _\Closure_ **$closure**)
+#### share(_string_ **$name**, _\Closure_ **$closure**, \[_array_ **$tags**\])
+
+Register a shared service
 
 ``` php
-// sample goes here
+$bowl = new \Bowl\Bowl();
+$bowl->share('logger', function () {
+    return new Logger();
+});
+
+$bowl->get('logger')->log($message);
 ```
 
-#### factory(_string_ **$name**, _\Closure_ **$closure**)
+#### factory(_string_ **$name**, _\Closure_ **$closure**, \[_array_ **$tags**\])
+
+Register a factory service
 
 ``` php
-// sample goes here
+$bowl = new \Bowl\Bowl();
+$bowl->share('date.now', function () {
+    return new \DateTime('now');
+});
+
+$bowl->get('date.now')->format('r');
 ```
 
 #### extend(_string_ **$name**, _\Closure_ **$closure**)
 
+Extend a service definition
+
 ``` php
-// sample goes here
+$bowl = new \Bowl\Bowl();
+$bowl->share('logger', function () {
+    return new Logger();
+});
+
+$bowl->extend('logger', function (LoggerInterface $logger) {
+    $logger->setPath(__DIR__.'/../app/logs');
+
+    return $logger;
+});
+
+$bowl->get('logger')->log($message);
 ```
 
 #### get(_string_ **$name**)
 
+Get an object
+
 ``` php
-// sample goes here
+$bowl = new \Bowl\Bowl();
+$bowl['debug'] = true;
+$bowl->factory('filesystem', function () {
+    return new Filesystem();
+});
+$bowl->share('logger', function () {
+    if ($this['debug']) {
+        return new ConsoleLogger();
+    } else {
+        return new FilesystemLogger($this->get('filesystem'));
+    }
+});
+
+$logger = $bowl->get('logger');
 ```
 
 #### getTaggedServices(_string_ **$name**)
 
+Get services having a tag
+
 ``` php
-// sample goes here
+$bowl = new \Bowl\Bowl();
+$bowl->share('transport.smtp', function () {
+    return new SmtpTransport();
+}, ['email.transport']);
+$bowl->share('transport.sendmail', function () {
+    return new SendmailTransport();
+}, ['email.transport']);
+$bowl->share('mailer', function () {
+    $mailer = new Mailer();
+    foreach ($this->getTaggedServices('email.transport') as $service) {
+        $mailer->addTransport($service);
+    }
+
+    return $mailer;
+});
+
+$bowl->get('mailer')->send($mimeMessage);
 ```
 
 Contributing
