@@ -5,7 +5,6 @@ Bowl, Yet Another Dependency Injection Container (PHP5.4+)
 - Perform a Lazy instantiation
 - Perform a Factory pattern
 - No external files to configure dependencies
-
 - You don't have to instantiate object yourself
 - You can avoid Singleton/Factory pattern from your classes
 

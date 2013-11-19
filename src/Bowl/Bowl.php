@@ -81,9 +81,11 @@ class Bowl implements \ArrayAccess
     }
 
     /**
-     * @param          $name
+     * @param string   $name
      * @param callable $closure
+     *
      * @throws \InvalidArgumentException
+     *
      * @return $this
      */
     public function extend($name, \Closure $closure)
@@ -108,6 +110,7 @@ class Bowl implements \ArrayAccess
      * @param string $name
      *
      * @throws \InvalidArgumentException
+     *
      * @return TaggedServices
      */
     public function getTaggedServices($name)
