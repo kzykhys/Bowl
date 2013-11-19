@@ -8,6 +8,11 @@ Bowl, Yet Another Dependency Injection Container (PHP5.4+)
 - No external files to configure dependencies
 - You can avoid Singleton/Factory pattern from your classes
 
+Requirements
+------------
+
+* PHP5.4+
+
 Installation
 ------------
 
