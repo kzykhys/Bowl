@@ -78,7 +78,7 @@ $bowl->share('connection', function () {
 });
 ```
 
-### Using tags to manage collection of services
+### Using tags to manage a collection of services
 
 ``` php
 $bowl = new \Bowl\Bowl();
