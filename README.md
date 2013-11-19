@@ -317,6 +317,25 @@ $bowl->share('mailer', function () {
 $bowl->get('mailer')->send($mimeMessage);
 ```
 
+#### reset(_string_, **$name**)
+
+Re-instantiate the object, even if the service is shared object.
+
+**This is unsafe operation**
+
+``` php
+$bowl = new \Bowl\Bowl();
+$bowl->share('registry', function () {
+    return new Registry();
+});
+
+try {
+    $bowl->get('registry')->getManager()->flush();
+} catch (\Exception $e) {
+    $bowl->reset('registry');
+}
+```
+
 Contributing
 ------------
 
