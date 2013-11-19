@@ -196,7 +196,7 @@ API
 
 ### Manage environment
 
-#### configure(_string_ **$environment, _\Closure_ **$closure**)
+#### configure(_string_ **$environment**, _\Closure_ **$closure**)
 
 You can configure Bowl based on environment flags such as production and development.
 
