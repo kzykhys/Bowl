@@ -1,13 +1,18 @@
 {
     "name": "kzykhys/bowl",
     "description": "Yet another dependency injection container for PHP5.4",
+    "license": "MIT",
     "minimum-stability": "stable",
+    "keywords": ["dependency", "injection", "container", "DI", "DIC"],
     "authors": [
         {
             "name": "Kazuyuki Hayashi",
             "email": "hayashi@valnur.net"
         }
     ],
+    "require": {
+        "php": ">=5.4"
+    },
     "autoload": {
         "psr-0": {
             "": "src/"
