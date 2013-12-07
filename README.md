@@ -4,6 +4,7 @@ Bowl, Yet Another Dependency Injection Container (PHP5.4+)
 [![Latest Stable Version](https://poser.pugx.org/kzykhys/bowl/v/stable.png)](https://packagist.org/packages/kzykhys/bowl)
 [![Build Status](https://travis-ci.org/kzykhys/Bowl.png?branch=master)](https://travis-ci.org/kzykhys/Bowl)
 [![Coverage Status](https://coveralls.io/repos/kzykhys/Bowl/badge.png)](https://coveralls.io/r/kzykhys/Bowl)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/51cdc89c-f685-452d-9965-6e5e86600acc/mini.png)](https://insight.sensiolabs.com/projects/51cdc89c-f685-452d-9965-6e5e86600acc)
 
 - Manage multiple environment (production/development/test ...)
 - Manage dependencies between objects
